@@ -1,27 +1,19 @@
-package com;
+package com.model.jsonparser;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MyDateDeserializer extends StdDeserializer<Date> {
+public class MyDateDeserializer extends JsonDeserializer<Date> {
     private static SimpleDateFormat formatter
-            = new SimpleDateFormat("dd-MM-yyyy");
+            = new SimpleDateFormat("yyyy-dd-MM");
 
-    public MyDateDeserializer() {
-        this(null);
-    }
-
-    private MyDateDeserializer(Class<?> vc) {
-        super(vc);
-    }
 
     @Override
     public Date deserialize(JsonParser jsonParser,

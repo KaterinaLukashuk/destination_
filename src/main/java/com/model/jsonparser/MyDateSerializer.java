@@ -1,4 +1,4 @@
-package com;
+package com.model.jsonparser;
 
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class MyDateSerializer extends StdSerializer<Date> {
     private static SimpleDateFormat formatter
-            = new SimpleDateFormat("dd-MM-yyyy");
+            = new SimpleDateFormat("yyyy-dd-MM");
 
     public MyDateSerializer() {
         this(null);

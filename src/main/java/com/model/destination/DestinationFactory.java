@@ -1,4 +1,4 @@
-package com;
+package com.model.destination;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

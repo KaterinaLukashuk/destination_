@@ -1,7 +1,8 @@
-package com;
+package com.model.data;
 
+import com.model.jsonparser.MyDateDeserializer;
+import com.model.jsonparser.MyDateSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 

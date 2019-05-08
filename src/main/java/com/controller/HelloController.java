@@ -1,11 +1,13 @@
-package com;
+package com.controller;
 
+import com.model.destination.DestinationFactory;
+import com.model.jsonparser.JsonUtils;
+import com.model.data.Holiday;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.sap.ea.eacp.okhttp.destinationclient.OkHttpDestination;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,19 +28,16 @@ public class HelloController {
         Request.Builder builder = tryDestination.newRequest("/holidays/all").get();
         Request request = builder.build();
         Response response = client.newCall(request).execute();
-      //  ParseJSON parseJSON = new ParseJSON();
-        String hollidaysStr = "";
-
-          //  List<Holiday> holidays = parseJSON.parse(response.body().string());
-            List<Holiday> holidays = JsonUtils.holidaysFromJSON(response.body().string(), new TypeReference<List<Holiday>>(){});
+        String holidaysStr = "";
+            List<Holiday> holidays = (List<Holiday>) JsonUtils.holidayFromJSON(response.body().string(), new TypeReference<List<Holiday>>(){});
             for (int i = 0; i < holidays.size(); i++)
             {
-                hollidaysStr += holidays.get(i).getDate() + " " +
+                holidaysStr += holidays.get(i).getDate() + " " +
                         holidays.get(i).getName() + " " +
                         holidays.get(i).getClassH() + "<br>";
             }
 
-        return ResponseEntity.ok(hollidaysStr);
+        return ResponseEntity.ok(holidaysStr);
     }
 
 }
