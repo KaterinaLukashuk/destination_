@@ -19,7 +19,7 @@ public class MyDateDeserializer extends StdDeserializer<Date> {
         this(null);
     }
 
-    public MyDateDeserializer(Class<?> vc) {
+    private MyDateDeserializer(Class<?> vc) {
         super(vc);
     }
 

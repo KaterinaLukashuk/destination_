@@ -12,11 +12,11 @@ public class Holiday {
     @JsonSerialize(using = MyDateSerializer.class)
     @JsonDeserialize(using = MyDateDeserializer.class)
     @JsonProperty("date")
-    Date date;
+    private Date date;
     @JsonProperty("name")
-    String name;
+    private String name;
     @JsonProperty("class")
-    String classH;
+    private String classH;
 
 
     public Holiday() {

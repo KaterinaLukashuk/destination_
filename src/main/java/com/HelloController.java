@@ -37,7 +37,7 @@ public class HelloController {
                         holidays.get(i).getName() + " " +
                         holidays.get(i).getClassH() + "<br>";
             }
-            hollidaysStr =  JsonUtils.holidayToJSON(holidays.get(0));
+
         return ResponseEntity.ok(hollidaysStr);
     }
 
