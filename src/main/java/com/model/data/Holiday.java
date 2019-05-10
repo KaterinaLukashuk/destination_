@@ -1,7 +1,7 @@
 package com.model.data;
 
-import com.model.jsonparser.MyDateDeserializer;
-import com.model.jsonparser.MyDateSerializer;
+import com.utils.jsonparser.MyDateDeserializer;
+import com.utils.jsonparser.MyDateSerializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -18,7 +18,6 @@ public class Holiday {
     private String name;
     @JsonProperty("class")
     private String classH;
-
 
     public Holiday() {
     }

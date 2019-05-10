@@ -1,7 +1,6 @@
-package com.model.jsonparser;
+package com.utils.jsonparser;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
@@ -17,9 +16,9 @@ public class MyDateDeserializer extends JsonDeserializer<Date> {
 
     @Override
     public Date deserialize(JsonParser jsonParser,
-                            DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+                            DeserializationContext deserializationContext) throws IOException {
         try {
-            return formatter.parse(jsonParser.getText());
+            return  formatter.parse(jsonParser.getText());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

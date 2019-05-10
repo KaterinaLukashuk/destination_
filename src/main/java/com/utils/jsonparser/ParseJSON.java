@@ -1,4 +1,4 @@
-package com.model.jsonparser;
+package com.utils.jsonparser;
 
 import com.model.data.Holiday;
 import org.json.JSONArray;

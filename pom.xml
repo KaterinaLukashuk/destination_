@@ -21,12 +21,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
 
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>ch.qos.logback</groupId>-->
-<!--                    <artifactId>logback-classic</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <groupId>ch.qos.logback</groupId>-->
+            <!--                    <artifactId>logback-classic</artifactId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
 
         </dependency>
 
@@ -79,9 +79,9 @@
         </dependency>
 
         <dependency>
-        <groupId>com.sap.ea.eacp</groupId>
-        <artifactId>okhttp-destination-client</artifactId>
-        <version>2.2.4</version>
+            <groupId>com.sap.ea.eacp</groupId>
+            <artifactId>okhttp-destination-client</artifactId>
+            <version>2.2.4</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin.external.google</groupId>
@@ -97,6 +97,12 @@
             <groupId>antlr</groupId>
             <artifactId>antlr</artifactId>
             <version>2.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -135,7 +141,7 @@
             </plugin>
         </plugins>
 
-    <finalName>ROOT</finalName>
+        <finalName>ROOT</finalName>
     </build>
 
 </project>
