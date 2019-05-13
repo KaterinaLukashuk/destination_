@@ -1,6 +1,6 @@
 package com.config;
 
-import com.utils.destination.DestinationFactory;
+import com.destination.DestinationFactory;
 import com.sap.ea.eacp.okhttp.destinationclient.OkHttpDestination;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Controller
 @RequestMapping("/api")
@@ -59,3 +58,8 @@ public class HelloController {
         return ResponseEntity.ok(holidayService.calculateJson(calculate));
     }
 }
+
+//        /api/holidays/all
+//        /api/isholliday/2019-01-01
+//        /api/calc/0001/1555576817000
+//        /api/calcjson/?companyCode=0001&submissionDate=2019-04-18T08:40:17&hearingDate=2019-04-23&deadline=2019-04-30

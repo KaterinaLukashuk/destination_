@@ -49,8 +49,6 @@ public class HolidayService {
     public String calculate(Response response) throws IOException {
         Calculate calculate = JsonUtils.fromJSON(response.body().string(), new TypeReference<Calculate>() {
         });
-      //  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-       // LocalDateFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         StringBuilder str = new StringBuilder();
         str.append("Company code: ").append(calculate.getCompanyCode()).append("<br>").
                 append("Submission date: ").append(calculate.getSubmissionDate()).append("<br>").
