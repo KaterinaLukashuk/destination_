@@ -13,5 +13,4 @@ public class DestinationConfig {
         DestinationFactory destinationFactory = new DestinationFactory();
         return destinationFactory.provide("try");
     }
-
 }

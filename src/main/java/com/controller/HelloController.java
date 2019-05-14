@@ -1,9 +1,9 @@
 package com.controller;
 
 import com.model.data.Calculate;
-import com.sap.ea.eacp.okhttp.destinationclient.OkHttpDestination;
+import com.model.data.Holiday;
+import com.service.CalculateService;
 import com.service.HolidayService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,22 +12,35 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/api")
 public class HelloController {
 
-    @Autowired
-    private HolidayService holidayService;
+
+    private final HolidayService holidayService;
+
+
+    private final CalculateService calculateService;
+
+    public HelloController(HolidayService holidayService,
+                           CalculateService calculateService) {
+        this.holidayService = holidayService;
+        this.calculateService = calculateService;
+    }
 
 
     @GetMapping
     public ResponseEntity index() throws IOException {
         return ResponseEntity.ok(holidayService.getAllHolidays(holidayService.getResponse("/holidays/all")));
     }
+
 
     @GetMapping("isholliday/{date}")
     public ResponseEntity isHoliday(@PathVariable String date) throws IOException {
@@ -37,10 +50,11 @@ public class HelloController {
     @GetMapping("calc/{company}/{millis}")
     public ResponseEntity calculate(@PathVariable String company,
                                     @PathVariable String millis) throws IOException {
-        return ResponseEntity.ok(holidayService.calculate(holidayService.getResponse("/calculate/" + company + "/" + millis)));
+        return ResponseEntity.ok(calculateService.calculateObj(holidayService.getResponse("/calculate/"
+                + company + "/" + millis)));
     }
 
-    // @GetMapping("calcjson/{companyCode}/{submissionDate}/{hearingDate}/{deadline}")
+
     @GetMapping("calcjson")
     public ResponseEntity calculateToJson(@RequestParam(name = "companyCode", required = false) String companyCode,
                                           @RequestParam(name = "submissionDate", required = false)
@@ -53,9 +67,23 @@ public class HelloController {
                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                   LocalDate deadline
     ) throws IOException {
-
         Calculate calculate = new Calculate(companyCode, submissionDate, hearingDate, deadline);
-        return ResponseEntity.ok(holidayService.calculateJson(calculate));
+        return ResponseEntity.ok(calculateService.calculateJson(calculate));
+    }
+
+    @GetMapping("mycalc/{company}/{date}")
+    public ResponseEntity myCalculate(@PathVariable String company,
+                                      @PathVariable
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                              LocalDate date)
+            throws IOException {
+        List<Holiday> holidays = holidayService.getHolidaysList(holidayService.getResponse("/holidays/all"));
+        try {
+            Calculate calculate = calculateService.calculateDeadline(date, holidays, company);
+            return ResponseEntity.ok(calculateService.calculateJson(calculate));
+        } catch (BadRequestException e) {
+            return ResponseEntity.ok(e.getMessage());
+        }
     }
 }
 

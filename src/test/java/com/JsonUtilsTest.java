@@ -27,7 +27,7 @@ public class JsonUtilsTest {
         });
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM");
         for (Holiday holiday : holidays) {
-            System.out.println(formatter.format(holiday.getDate()) + " " + holiday.getName() + " " + holiday.getClassH());
+            System.out.println(holiday.getDate() + " " + holiday.getName() + " " + holiday.getClassH());
         }
     }
 
@@ -43,7 +43,7 @@ public class JsonUtilsTest {
 
     @org.junit.Test
     public void holidayToJSON() throws JsonProcessingException {
-        Holiday holiday = new Holiday(new Date(), "name", "class");
+        Holiday holiday = new Holiday(LocalDate.now(), "name", "class");
         System.out.println(JsonUtils.toJSON(holiday));
     }
 
@@ -59,9 +59,9 @@ public class JsonUtilsTest {
 
     @org.junit.Test
     public void calcToJSON() throws JsonProcessingException {
-        Calculate calculate = new Calculate("0001",
-                LocalDateTime.parse("2019-04-18T08:40:17"),
+        Calculate calculate = new Calculate(null,
                 null,
+                LocalDate.now(),
                 null
                 );
         System.out.println(JsonUtils.toJSON(calculate));
