@@ -12,7 +12,6 @@ import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 @Service
@@ -24,22 +23,26 @@ public class CalculateService {
     public static final long DAYS_AMOUNT_FOR_COMPANY_A = 6;
     public static final long DAYS_AMOUNT_FOR_COMPANY_B = 9;
 
-    private BiPredicate<LocalDate, List<Holiday>> isHoliday =
-            (date, holidays) -> {
-        for (Holiday holiday : holidays) {
-            if (holiday.getDate().compareTo(date) == 0) {
-                return true;
-            }
-        }
-        return false;
-    };
+//    private BiPredicate<LocalDate, List<Holiday>> isHoliday =
+//            (date, holidays) -> {
+//        for (Holiday holiday : holidays) {
+//            if (holiday.getDate().compareTo(date) == 0) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    };
+
+    public boolean isHoliday(LocalDate date, List<Holiday> holidays) {
+        return holidays.stream().anyMatch(holiday -> date.compareTo(holiday.getDate()) == 0);
+    }
 
     private Predicate<LocalDate> isWeekend = (date) ->
             (date.getDayOfWeek().toString().equals(SATURDAY)
                     || date.getDayOfWeek().toString().equals(SUNDAY));
 
 
-    public long getDaysAmountForCompany(String companyCode) {
+    private long getDaysAmountForCompany(String companyCode) {
         switch (companyCode) {
             case COMPANY_A_CODE:
                 return DAYS_AMOUNT_FOR_COMPANY_A;
@@ -50,15 +53,15 @@ public class CalculateService {
         }
     }
 
-    public Calculate calculateDeadline(final LocalDate startDate,
-                                       final List<Holiday> holidays,
-                                       final String companyCode) {
+    public Calculate calculateDeadline(LocalDate startDate,
+                                       List<Holiday> holidays,
+                                       String companyCode) {
         LocalDate deadline = startDate.
                 plusDays(getDaysAmountForCompany(companyCode));
 
         LocalDate date = startDate;
         while (date.isBefore(deadline) || date.compareTo(deadline) == 0) {
-            if (isHoliday.test(date, holidays) || isWeekend.test(date)) {
+            if (isHoliday(date, holidays) || isWeekend.test(date)) {
                 deadline = deadline.plusDays(1);
             }
             date = date.plusDays(1);
@@ -93,7 +96,7 @@ public class CalculateService {
                               List<Holiday> holidays) {
         int amount = 0;
         while (startDate.isBefore(deadline) || startDate.compareTo(deadline) == 0) {
-            if (isHoliday.test(startDate, holidays)) {
+            if (isHoliday(startDate, holidays)) {
                 amount++;
             }
             startDate = startDate.plusDays(1);

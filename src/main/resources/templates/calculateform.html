@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<div>
+    <form method="post"   th:action="@{/api/mycalc}">
+        Company code:  <input type="text" name="company">
+        date: <input type="date" name = "date">
+        <button type="submit">calculate</button>
+    </form>
+    <div>
+
+        <p th:if="${errormsg != null}" th:text="${errormsg}"> </p>
+        <p th:if="${errordate != null}" th:text="${errordate}"> </p>
+        <p th:if="${deadline != null}" th:text="${'company code: ' + deadline.getCompanyCode()}"> </p>
+        <p th:if="${deadline != null}" th:text="${'start date: ' + deadline.getHearingDate()}"> </p>
+        <p th:if="${deadline != null}" th:text="${'deadline: ' + deadline.getDeadline()}"> </p>
+    </div>
+</div>
+</body>
+</html>

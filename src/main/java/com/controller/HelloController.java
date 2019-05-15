@@ -7,11 +7,12 @@ import com.service.HolidayService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.List;
 
 
 @Controller
+@Validated
 @RequestMapping("/api")
 public class HelloController {
 
@@ -38,6 +40,7 @@ public class HelloController {
 
     @GetMapping
     public ResponseEntity index() throws IOException {
+
         return ResponseEntity.ok(holidayService.getAllHolidays(holidayService.getResponse("/holidays/all")));
     }
 
@@ -71,19 +74,33 @@ public class HelloController {
         return ResponseEntity.ok(calculateService.calculateJson(calculate));
     }
 
-    @GetMapping("mycalc/{company}/{date}")
-    public ResponseEntity myCalculate(@PathVariable String company,
-                                      @PathVariable
-                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                                              LocalDate date)
+    @PostMapping("mycalc")
+    //@GetMapping("mycalc/{company}/{date}")
+    public String myCalculate(@RequestParam(name = "company") String company,
+                              @RequestParam(name = "date")
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//                              @Valid @NotNull(message = "date is empty" )
+                                      LocalDate date,
+                              Model model)
             throws IOException {
+        if (date == null) {
+            model.addAttribute("errordate", "the date is empty");
+            return "calculateform";
+        }
         List<Holiday> holidays = holidayService.getHolidaysList(holidayService.getResponse("/holidays/all"));
         try {
             Calculate calculate = calculateService.calculateDeadline(date, holidays, company);
-            return ResponseEntity.ok(calculateService.calculateJson(calculate));
+            model.addAttribute("deadline", calculate);
+            return "calculateform";
         } catch (BadRequestException e) {
-            return ResponseEntity.ok(e.getMessage());
+            model.addAttribute("errormsg", "bad value");
+            return "calculateform";
         }
+    }
+
+    @GetMapping("calculateform")
+    public String getCalculateForm(Model model) {
+        return "calculateform";
     }
 }
 
