@@ -16,4 +16,9 @@
         <res-ref-name>TenantContext</res-ref-name>
         <res-type>com.sap.cloud.account.TenantContext</res-type>
     </resource-ref>
+    <resource-ref>
+        <res-ref-name>EcmService</res-ref-name>
+        <res-type>com.sap.ecm.api.EcmService</res-type>
+    </resource-ref>
+
 </web-app>

@@ -26,7 +26,7 @@ public class HolidayService {
     }
 
 
-    public Response getResponse(String req) throws IOException {
+    public Response getResponse(String req) throws IOException, RuntimeException {
         Request request = tryDestination.newRequest(req).get().build();
         OkHttpClient client = tryDestination.client();
         return client.newCall(request).execute();

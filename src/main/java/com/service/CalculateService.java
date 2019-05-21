@@ -56,17 +56,20 @@ public class CalculateService {
     public Calculate calculateDeadline(LocalDate startDate,
                                        List<Holiday> holidays,
                                        String companyCode) {
-        LocalDate deadline = startDate.
-                plusDays(getDaysAmountForCompany(companyCode));
+        if (startDate != null) {
+            LocalDate deadline = startDate.
+                    plusDays(getDaysAmountForCompany(companyCode));
 
-        LocalDate date = startDate;
-        while (date.isBefore(deadline) || date.compareTo(deadline) == 0) {
-            if (isHoliday(date, holidays) || isWeekend.test(date)) {
-                deadline = deadline.plusDays(1);
+            LocalDate date = startDate;
+            while (date.isBefore(deadline) || date.compareTo(deadline) == 0) {
+                if (isHoliday(date, holidays) || isWeekend.test(date)) {
+                    deadline = deadline.plusDays(1);
+                }
+                date = date.plusDays(1);
             }
-            date = date.plusDays(1);
+            return new Calculate(companyCode, null, startDate, deadline);
         }
-        return new Calculate(companyCode, null, startDate, deadline);
+        return null;
     }
 
     public String calculateObj(final Response response) throws IOException {

@@ -2,7 +2,10 @@ package com.controller;
 
 import com.model.data.Calculate;
 import com.model.data.Holiday;
+import com.sap.ecm.api.EcmService;
+import com.sap.ecm.api.RepositoryOptions;
 import com.service.CalculateService;
+import com.service.DocumentService;
 import com.service.HolidayService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +14,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,15 +31,19 @@ import java.util.List;
 public class HelloController {
 
 
+
     private final HolidayService holidayService;
 
 
     private final CalculateService calculateService;
 
+    private final DocumentService documentService;
+
     public HelloController(HolidayService holidayService,
-                           CalculateService calculateService) {
+                           CalculateService calculateService, DocumentService documentService) {
         this.holidayService = holidayService;
         this.calculateService = calculateService;
+        this.documentService = documentService;
     }
 
 
@@ -75,32 +84,31 @@ public class HelloController {
     }
 
     @PostMapping("mycalc")
-    //@GetMapping("mycalc/{company}/{date}")
     public String myCalculate(@RequestParam(name = "company") String company,
                               @RequestParam(name = "date")
                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-//                              @Valid @NotNull(message = "date is empty" )
+                              @NotNull
                                       LocalDate date,
                               Model model)
             throws IOException {
-        if (date == null) {
-            model.addAttribute("errordate", "the date is empty");
-            return "calculateform";
-        }
         List<Holiday> holidays = holidayService.getHolidaysList(holidayService.getResponse("/holidays/all"));
         try {
-            Calculate calculate = calculateService.calculateDeadline(date, holidays, company);
-            model.addAttribute("deadline", calculate);
-            return "calculateform";
+            model.addAttribute("deadline", calculateService.calculateDeadline(date, holidays, company));
         } catch (BadRequestException e) {
             model.addAttribute("errormsg", "bad value");
-            return "calculateform";
         }
+        return "calculateform";
     }
 
     @GetMapping("calculateform")
-    public String getCalculateForm(Model model) {
+    public String getCalculateForm() {
         return "calculateform";
+    }
+
+    @GetMapping("repo")
+    public ResponseEntity repo() throws NamingException, UnsupportedEncodingException {
+        documentService.createDocument();
+        return ResponseEntity.ok("repo");
     }
 }
 
