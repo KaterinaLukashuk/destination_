@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/api/addDoc}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file"/>
+    <input type="submit" value="add"/>
+<!--    <input type="hidden" name="_csrf" value="${_csrf.token}"/>-->
+</form>
+<p th:if="${newdoc != null}" th:text="${newdoc}"></p>
+<div>
+    <table border="1">
+        <tr>
+            <td>file name</td>
+            <td>download link</td>
+            <td>delete link</td>
+        </tr>
+    <tr th:each="doc: ${documents}" >
+        <td th:text="${doc.getName()}" ></td>
+        <td>
+            <a th:href="@{'/api/download/' + ${doc.getId()}}" >
+                download
+            </a>
+        </td>
+        <td>
+            <a th:href="@{'/api/delete/' + ${doc.getId()}}" >
+                delete
+            </a>
+        </td>
+    </tr>
+    </table>
+</div>
+</body>
+</html>

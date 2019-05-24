@@ -2,38 +2,34 @@ package com.controller;
 
 import com.model.data.Calculate;
 import com.model.data.Holiday;
-import com.sap.ecm.api.EcmService;
-import com.sap.ecm.api.RepositoryOptions;
 import com.service.CalculateService;
 import com.service.DocumentService;
 import com.service.HolidayService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@Slf4j
 @Controller
 @Validated
 @RequestMapping("/api")
 public class HelloController {
 
 
-
     private final HolidayService holidayService;
-
 
     private final CalculateService calculateService;
 
@@ -105,10 +101,37 @@ public class HelloController {
         return "calculateform";
     }
 
-    @GetMapping("repo")
-    public ResponseEntity repo() throws NamingException, UnsupportedEncodingException {
-        documentService.createDocument();
-        return ResponseEntity.ok("repo");
+    @GetMapping("addDocument")
+    public String getAddDocumentForm(Model model) {
+        model.addAttribute("documents", documentService.getChildren());
+        return "addDocument";
+    }
+
+    @PostMapping("addDoc")
+    public String addDocument(@RequestParam("file") MultipartFile file,
+                              Model model) throws IOException {
+        Document document = documentService.createDocument(file.getOriginalFilename(), file.getBytes());
+        model.addAttribute("newdoc", document.getContentStream().getFileName());
+        model.addAttribute("documents", documentService.getChildren());
+        return "redirect:addDocument";
+    }
+
+
+    @GetMapping("download/{docId}")
+    public ResponseEntity downloadDocument(
+            @PathVariable String docId
+    ) {
+        return documentService.downloadDoc(docId);
+    }
+
+    @GetMapping("delete/{docId}")
+    public String deleteDocument(
+            @PathVariable String docId,
+            Model model
+    ) {
+        documentService.deleteDoc(docId);
+        model.addAttribute("documents", documentService.getChildren());
+        return "addDocument";
     }
 }
 

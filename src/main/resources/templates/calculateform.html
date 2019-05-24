@@ -13,7 +13,7 @@
     <div>
 
         <p th:if="${errormsg != null}" th:text="${errormsg}"> </p>
-        <p th:if="${errordate != null}" th:text="${errordate}"> </p>
+<!--        <p th:if="${errordate != null}" th:text="${errordate}"> </p>-->
         <p th:if="${deadline != null}" th:text="${'company code: ' + deadline.getCompanyCode()}"> </p>
         <p th:if="${deadline != null}" th:text="${'start date: ' + deadline.getHearingDate()}"> </p>
         <p th:if="${deadline != null}" th:text="${'deadline: ' + deadline.getDeadline()}"> </p>
