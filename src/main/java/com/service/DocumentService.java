@@ -1,5 +1,6 @@
 package com.service;
 
+import com.model.data.ThreadLocalWithUserContext;
 import com.sap.ecm.api.EcmService;
 import com.sap.ecm.api.RepositoryOptions;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContext;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -57,9 +57,9 @@ public class DocumentService {
         root.createFolder(newFolderProps);
     }
 
-    public Document createDocument(String docName, byte[] content) throws IOException {
+    public Document createDocument(String docName, byte[] content, String username) {
         Session session = connectRepo();
-        Folder root = session.getRootFolder();
+        Folder root = getUsersFolder(username);
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(PropertyIds.OBJECT_TYPE_ID, "cmis:document");
         properties.put(PropertyIds.NAME, docName);
@@ -72,10 +72,35 @@ public class DocumentService {
     }
 
 
+    public ItemIterable<CmisObject> getUsersChildren(Folder folder) {
+        return folder.getChildren();
+    }
+
     public ItemIterable<CmisObject> getChildren() {
         return connectRepo().getRootFolder().getChildren();
     }
 
+    public List<Document> getAdminDocs() {
+        ItemIterable<CmisObject> children = connectRepo().getRootFolder().getChildren();
+        List<Document> documents = new ArrayList<>();
+        for (CmisObject child : children) {
+            if (child instanceof Folder) {
+                for (CmisObject cmisObject : ((Folder) child).getChildren()) {
+                    documents.add((Document) cmisObject);
+                }
+            }
+        }
+        return documents;
+    }
+
+    public Folder getUsersFolder(String username) {
+        try {
+            return (Folder) connectRepo().getObjectByPath("/" + username);
+        } catch (CmisObjectNotFoundException e) {
+            createFolder(ThreadLocalWithUserContext.getUser().getName());
+        }
+        return (Folder) connectRepo().getObjectByPath("/" + username);
+    }
 
     public ResponseEntity downloadDoc(String docId) {
         Document document = (Document) connectRepo().getObject(docId);
@@ -87,6 +112,10 @@ public class DocumentService {
     }
 
     public void deleteDoc(String docId) {
-        connectRepo().getObject(docId).delete();
+        try {
+            connectRepo().getObject(docId).delete();
+        } catch (CmisObjectNotFoundException e) {
+            log.error(e.getMessage());
+        }
     }
 }

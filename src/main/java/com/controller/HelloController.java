@@ -2,6 +2,7 @@ package com.controller;
 
 import com.model.data.Calculate;
 import com.model.data.Holiday;
+import com.model.data.ThreadLocalWithUserContext;
 import com.service.CalculateService;
 import com.service.DocumentService;
 import com.service.HolidayService;
@@ -14,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.BadRequestException;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping("/api")
 public class HelloController {
 
+    public final String ADMIN_ROLE = "admin";
 
     private final HolidayService holidayService;
 
@@ -35,7 +36,7 @@ public class HelloController {
 
     private final DocumentService documentService;
 
-    public HelloController(HolidayService holidayService,
+    public HelloController( HolidayService holidayService,
                            CalculateService calculateService, DocumentService documentService) {
         this.holidayService = holidayService;
         this.calculateService = calculateService;
@@ -103,16 +104,35 @@ public class HelloController {
 
     @GetMapping("addDocument")
     public String getAddDocumentForm(Model model) {
-        model.addAttribute("documents", documentService.getChildren());
+
+
+        if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
+            model.addAttribute("documents", documentService.getAdminDocs());
+        } else {
+
+            model.addAttribute("documents", documentService
+                    .getUsersChildren(documentService
+                            .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
+        }
+        model.addAttribute("user", ThreadLocalWithUserContext.getUser().getName());
         return "addDocument";
     }
 
     @PostMapping("addDoc")
     public String addDocument(@RequestParam("file") MultipartFile file,
                               Model model) throws IOException {
-        Document document = documentService.createDocument(file.getOriginalFilename(), file.getBytes());
+        Document document = documentService.createDocument(file.getOriginalFilename(),
+                file.getBytes(),
+                ThreadLocalWithUserContext.getUser().getName());
+
         model.addAttribute("newdoc", document.getContentStream().getFileName());
-        model.addAttribute("documents", documentService.getChildren());
+        if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
+            model.addAttribute("documents", documentService.getAdminDocs());
+        } else {
+            model.addAttribute("documents", documentService
+                    .getUsersChildren(documentService
+                            .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
+        }
         return "redirect:addDocument";
     }
 
@@ -130,8 +150,14 @@ public class HelloController {
             Model model
     ) {
         documentService.deleteDoc(docId);
-        model.addAttribute("documents", documentService.getChildren());
-        return "addDocument";
+        if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
+            model.addAttribute("documents", documentService.getAdminDocs());
+        } else {
+            model.addAttribute("documents", documentService
+                    .getUsersChildren(documentService
+                            .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
+        }
+        return "redirect:/api/addDocument";
     }
 }
 

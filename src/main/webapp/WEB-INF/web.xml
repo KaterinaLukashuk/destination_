@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
 
     <resource-ref>
@@ -20,5 +21,32 @@
         <res-ref-name>EcmService</res-ref-name>
         <res-type>com.sap.ecm.api.EcmService</res-type>
     </resource-ref>
+
+    <resource-ref>
+        <res-ref-name>user/Provider</res-ref-name>
+        <res-type>com.sap.security.um.user.UserProvider</res-type>
+    </resource-ref>
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+    </login-config>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>API Area</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Everyone</role-name>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-role>
+        <description>SAP Employees</description>
+        <role-name>Everyone</role-name>
+    </security-role>
+    <security-role>
+        <description>admin</description>
+        <role-name>admin</role-name>
+    </security-role>
 
 </web-app>

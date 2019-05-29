@@ -10,13 +10,15 @@
     <input type="submit" value="add"/>
 <!--    <input type="hidden" name="_csrf" value="${_csrf.token}"/>-->
 </form>
-<p th:if="${newdoc != null}" th:text="${newdoc}"></p>
+<!--<p th:if="${newdoc != null}" th:text="${newdoc}"></p>-->
+<p th:if="${user != null}" th:text="${user}"></p>
 <div>
     <table border="1">
         <tr>
             <td>file name</td>
             <td>download link</td>
             <td>delete link</td>
+            <td>created by</td>
         </tr>
     <tr th:each="doc: ${documents}" >
         <td th:text="${doc.getName()}" ></td>
@@ -29,6 +31,8 @@
             <a th:href="@{'/api/delete/' + ${doc.getId()}}" >
                 delete
             </a>
+        </td>
+        <td th:text="${doc.getCreatedBy()}">
         </td>
     </tr>
     </table>

@@ -1,5 +1,6 @@
 package com.controller;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisConstraintException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,11 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleJsonParseException (com.fasterxml.jackson.core.JsonParseException ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>("server not available", new HttpHeaders(), HttpStatus.valueOf(503));
+    }
+
+    @ExceptionHandler(CmisConstraintException.class)
+    public ResponseEntity<Object> handleCmisConstraintException(CmisConstraintException ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 }
