@@ -1,0 +1,10 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"  xmlns:th="http://www.thymeleaf.org">
+<section th:fragment="menu">
+    <ul>
+        <li th:each="menuItem : ${menuItemsList}">
+            <span  th:text="${menuItem.getName()}">prototype text...</span>
+<!--            <section th:include="fragment :: menu"  th:with="menuItemsList=${menuItem.getChildren()}"></section>-->
+        </li>
+    </ul>
+</section>
+</html>

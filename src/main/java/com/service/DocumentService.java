@@ -16,8 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -72,7 +75,7 @@ public class DocumentService {
     }
 
 
-    public ItemIterable<CmisObject> getUsersChildren(Folder folder) {
+    public ItemIterable<CmisObject> getUsersDocuments(Folder folder) {
         return folder.getChildren();
     }
 
@@ -80,17 +83,25 @@ public class DocumentService {
         return connectRepo().getRootFolder().getChildren();
     }
 
-    public List<Document> getAdminDocs() {
-        ItemIterable<CmisObject> children = connectRepo().getRootFolder().getChildren();
-        List<Document> documents = new ArrayList<>();
-        for (CmisObject child : children) {
-            if (child instanceof Folder) {
-                for (CmisObject cmisObject : ((Folder) child).getChildren()) {
-                    documents.add((Document) cmisObject);
-                }
-            }
-        }
-        return documents;
+
+    public List<CmisObject> getAdminDocs() {
+        return StreamSupport
+                .stream(connectRepo().getRootFolder().getChildren().spliterator(), false)
+                .filter(ob -> ob instanceof Folder)
+                .flatMap(ob -> StreamSupport.stream(((Folder) ob).getChildren().spliterator(), false))
+                .collect(Collectors.toList());
+    }
+
+    public List<CmisObject> getAllFolders() {
+        return StreamSupport
+                .stream(connectRepo().getRootFolder().getChildren().spliterator(), false)
+                .filter(ob -> ob instanceof Folder)
+                .collect(Collectors.toList());
+    }
+    public List<Folder> getRoot(){
+        List<Folder> folders = new ArrayList<>();
+        folders.add(connectRepo().getRootFolder());
+        return folders;
     }
 
     public Folder getUsersFolder(String username) {

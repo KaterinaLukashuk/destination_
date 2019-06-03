@@ -1,8 +1,8 @@
 package com.config;
 
-import com.filters.LogFilter;
-import com.filters.SetUserFilter;
-import com.filters.TestFilter;
+import com.filter.LogFilter;
+import com.filter.SetUserFilter;
+import com.filter.TestFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -7,7 +7,6 @@ import com.model.data.Holiday;
 import com.utils.jsonparser.JsonUtils;
 import okhttp3.Response;
 import org.springframework.stereotype.Service;
-
 import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,15 +22,7 @@ public class CalculateService {
     public static final long DAYS_AMOUNT_FOR_COMPANY_A = 6;
     public static final long DAYS_AMOUNT_FOR_COMPANY_B = 9;
 
-//    private BiPredicate<LocalDate, List<Holiday>> isHoliday =
-//            (date, holidays) -> {
-//        for (Holiday holiday : holidays) {
-//            if (holiday.getDate().compareTo(date) == 0) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    };
+
 
     public boolean isHoliday(LocalDate date, List<Holiday> holidays) {
         return holidays.stream().anyMatch(holiday -> date.compareTo(holiday.getDate()) == 0);

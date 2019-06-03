@@ -1,4 +1,4 @@
-package com.filters;
+package com.filter;
 
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +12,13 @@ import java.io.IOException;
 
 
 @Slf4j
-public class TestFilter extends GenericFilterBean {
+public class LogFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        log.info("this is another test filter");
-        chain.doFilter(request, response);
+        log.info("this is test filter");
+        chain.doFilter(request,response);
     }
 }

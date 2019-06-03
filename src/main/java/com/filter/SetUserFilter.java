@@ -1,4 +1,4 @@
-package com.filters;
+package com.filter;
 
 
 import com.model.data.ThreadLocalWithUserContext;

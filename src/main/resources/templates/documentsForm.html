@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:inline="javascript">
+        // // <![CDATA[
+        //
+        // var message = [[${user}]];
+        // console.log(message);
+        //
+        // // ]]>
+        //
+        // function f1(){
+        //     var d1 = document.getElementById('one');
+        //     d1.insertAdjacentHTML('afterend', '                <div th:if="${option.getType().getId()}==\'cmis:folder\'"\n' +
+        //         '                     th:with="folders = ${option.getChildren()}"\n' +
+        //         '                     th:include="this :: submenu"\n' +
+        //         '                     th:remove="tag">\n' +
+        //         '                </div>'
+        //     );
+        // }
+        function tree_toggle(event) {
+            event = event || window.event;
+            var node = event.target || event.srcElement;
+
+            if (node.className.search("\\bExpanded\\b") != -1)
+                node.className = node.className.replace('Expanded', 'Contracted');
+            else if (node.className.search("\\bContracted\\b") != -1)
+                node.className = node.className.replace('Contracted', 'Expanded');
+        }
+
+
+    </script>
+    <style>
+        .Tree ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        .Tree li {
+            list-style-position: inside;
+            list-style-image: url(../static/img/line_normal_begin.png);
+            background-image: url(../static/img/line_normal_begin_Copy.png);
+            background-position: top left;
+            background-repeat: repeat-y;
+            padding-left: 18px;
+            text-indent: -18px;
+            cursor: pointer;
+        }
+
+        .Tree .Last {
+            background-image: url();
+            background-repeat: no-repeat;
+        }
+
+        .Tree .Expanded {
+            list-style-image: url(../static/img/minus1.png);
+        }
+
+        .Tree .Contracted {
+            list-style-image: url(../static/img/add.png);
+        }
+
+        .Tree .Expanded ul {
+            display: block;
+        }
+
+        .Tree .Contracted ul {
+            display: none;
+        }
+
+
+    </style>
+</head>
+<body>
+<form th:action="@{/api/addDoc}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file"/>
+    <input type="submit" value="add"/>
+
+</form>
+
+<p th:if="${user != null}" th:text="${user}"></p>
+<div>
+    <table border="1">
+        <tr>
+            <td>file name</td>
+            <td>download link</td>
+            <td>delete link</td>
+            <td>created by</td>
+        </tr>
+        <tr th:each="doc: ${documents}">
+            <td th:text="${doc.getName()}"></td>
+            <td>
+                <a th:href="@{'/api/download/' + ${doc.getId()}}">
+                    download
+                </a>
+            </td>
+            <td>
+                <a th:href="@{'/api/delete/' + ${doc.getId()}}">
+                    delete
+                </a>
+            </td>
+            <td th:text="${doc.getCreatedBy()}">
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!--<div>-->
+
+
+<!--    <div th:fragment="submenu" th:remove="tag">-->
+<!--        <ul>-->
+<!--            <li th:each="option : ${folders}">-->
+<!--                <span th:text="${option.getName()}" id="one">Town hall</span>-->
+<!--                <div th:if="${option.getType().getId()}=='cmis:folder'"-->
+<!--                     th:with="folders = ${option.getChildren()}"-->
+<!--                     th:include="this :: submenu"-->
+<!--                     th:remove="tag">-->
+<!--                </div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<div>
+    <div class="Tree" onclick="tree_toggle(arguments[0])">
+<!--        <div>Tree</div>-->
+        <ul>
+            <li class="Last Expanded" th:each="option : ${folders}">
+                <span th:text="${option.getName()}"> </span>
+                <!--                this is root-->
+                <ul>
+                    <li class="Contracted"
+                        th:if="${option.getType().getId()}=='cmis:folder'"
+                        th:each="opt : ${option.getChildren()}">
+
+                        <span th:if="${opt.getType().getId()}=='cmis:folder'"
+                              th:text="${opt.getName()}">
+                        </span>
+                        <!--                this is users folder -->
+                        <ul>
+                            <li th:if="${opt.getType().getId()}=='cmis:folder'"
+                                th:each="opt2 : ${opt.getChildren()}">
+                                <span th:text="${opt2.getName()}">Town hall</span>
+                                <!--                this is documents from users folder-->
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>
