@@ -51,7 +51,7 @@ public class DocumentService {
         }
     }
 
-    public void createFolder(String folderName) {
+    private void createFolder(String folderName) {
         Session session = connectRepo();
         Folder root = session.getRootFolder();
         Map<String, String> newFolderProps = new HashMap<String, String>();
@@ -79,10 +79,6 @@ public class DocumentService {
         return folder.getChildren();
     }
 
-    public ItemIterable<CmisObject> getChildren() {
-        return connectRepo().getRootFolder().getChildren();
-    }
-
 
     public List<CmisObject> getAdminDocs() {
         return StreamSupport
@@ -92,12 +88,6 @@ public class DocumentService {
                 .collect(Collectors.toList());
     }
 
-    public List<CmisObject> getAllFolders() {
-        return StreamSupport
-                .stream(connectRepo().getRootFolder().getChildren().spliterator(), false)
-                .filter(ob -> ob instanceof Folder)
-                .collect(Collectors.toList());
-    }
     public List<Folder> getRoot(){
         List<Folder> folders = new ArrayList<>();
         folders.add(connectRepo().getRootFolder());

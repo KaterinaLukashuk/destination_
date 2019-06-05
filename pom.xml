@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.newhello</groupId>
-    <artifactId>newhello</artifactId>
+    <groupId>com.DestinationAddDocumentService</groupId>
+    <artifactId>DestinationAddDocumentService</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>war</packaging>
@@ -108,16 +108,6 @@
             <artifactId>jersey-common</artifactId>
             <version>2.22.2</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.thymeleaf</groupId>-->
-<!--            <artifactId>thymeleaf-spring4</artifactId>-->
-<!--            <version>2.1.2.RELEASE</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--        <groupId>org.thymeleaf.extras</groupId>-->
-<!--        <artifactId>thymeleaf-extras-springsecurity4</artifactId>-->
-<!--        <version>3.0.1.RELEASE</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>

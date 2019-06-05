@@ -7,7 +7,6 @@ import com.model.data.Holiday;
 import com.utils.jsonparser.JsonUtils;
 import okhttp3.Response;
 import org.springframework.stereotype.Service;
-import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,20 +32,20 @@ public class CalculateService {
                     || date.getDayOfWeek().toString().equals(SUNDAY));
 
 
-    private long getDaysAmountForCompany(String companyCode) {
+    private long getDaysAmountForCompany(String companyCode) throws IOException {
         switch (companyCode) {
             case COMPANY_A_CODE:
                 return DAYS_AMOUNT_FOR_COMPANY_A;
             case COMPANY_B_CODE:
                 return DAYS_AMOUNT_FOR_COMPANY_B;
             default:
-                throw new BadRequestException("bad company code value");
+                throw new IOException("bad company code value");
         }
     }
 
     public Calculate calculateDeadline(LocalDate startDate,
                                        List<Holiday> holidays,
-                                       String companyCode) {
+                                       String companyCode) throws IOException {
         if (startDate != null) {
             LocalDate deadline = startDate.
                     plusDays(getDaysAmountForCompany(companyCode));

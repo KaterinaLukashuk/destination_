@@ -4,22 +4,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script th:inline="javascript">
-        // // <![CDATA[
-        //
-        // var message = [[${user}]];
-        // console.log(message);
-        //
-        // // ]]>
-        //
-        // function f1(){
-        //     var d1 = document.getElementById('one');
-        //     d1.insertAdjacentHTML('afterend', '                <div th:if="${option.getType().getId()}==\'cmis:folder\'"\n' +
-        //         '                     th:with="folders = ${option.getChildren()}"\n' +
-        //         '                     th:include="this :: submenu"\n' +
-        //         '                     th:remove="tag">\n' +
-        //         '                </div>'
-        //     );
-        // }
         function tree_toggle(event) {
             event = event || window.event;
             var node = event.target || event.srcElement;
@@ -33,6 +17,15 @@
 
     </script>
     <style>
+        body{
+            background-color: grey;
+        }
+        table{
+            background-color: aliceblue;
+        }
+        span{
+            background-color: aliceblue;
+        }
         .Tree ul {
             padding: 0;
             margin: 0;
@@ -55,11 +48,11 @@
         }
 
         .Tree .Expanded {
-            list-style-image: url(../static/img/minus1.png);
+            list-style-image: url(../static/img/minus.png);
         }
 
         .Tree .Contracted {
-            list-style-image: url(../static/img/add.png);
+            list-style-image: url(../static/img/plus.png);
         }
 
         .Tree .Expanded ul {
@@ -77,10 +70,9 @@
 <form th:action="@{/api/addDoc}" method="post" enctype="multipart/form-data">
     <input type="file" name="file"/>
     <input type="submit" value="add"/>
-
 </form>
 
-<p th:if="${user != null}" th:text="${user}"></p>
+<span th:if="${user != null}" th:text="${user}"></span>
 <div>
     <table border="1">
         <tr>
@@ -107,25 +99,8 @@
     </table>
 </div>
 
-<!--<div>-->
 
-
-<!--    <div th:fragment="submenu" th:remove="tag">-->
-<!--        <ul>-->
-<!--            <li th:each="option : ${folders}">-->
-<!--                <span th:text="${option.getName()}" id="one">Town hall</span>-->
-<!--                <div th:if="${option.getType().getId()}=='cmis:folder'"-->
-<!--                     th:with="folders = ${option.getChildren()}"-->
-<!--                     th:include="this :: submenu"-->
-<!--                     th:remove="tag">-->
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-
-<!--</div>-->
-
-<div>
+<div style="background-color: aliceblue">
     <div class="Tree" onclick="tree_toggle(arguments[0])">
 <!--        <div>Tree</div>-->
         <ul>
@@ -144,7 +119,7 @@
                         <ul>
                             <li th:if="${opt.getType().getId()}=='cmis:folder'"
                                 th:each="opt2 : ${opt.getChildren()}">
-                                <span th:text="${opt2.getName()}">Town hall</span>
+                                <span th:text="${opt2.getName()}"> </span>
                                 <!--                this is documents from users folder-->
                             </li>
                         </ul>

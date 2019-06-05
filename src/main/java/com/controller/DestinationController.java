@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.BadRequestException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ public class DestinationController {
 
 
     public DestinationController(HolidayService holidayService,
-                                 CalculateService calculateService ) {
+                                 CalculateService calculateService) {
         this.holidayService = holidayService;
         this.calculateService = calculateService;
     }
@@ -38,19 +37,21 @@ public class DestinationController {
 
     @GetMapping
     public ResponseEntity index() throws IOException {
-
+        log.info("get all holidays from destination");
         return ResponseEntity.ok(holidayService.getAllHolidays(holidayService.getResponse("/holidays/all")));
     }
 
 
     @GetMapping("isholliday/{date}")
     public ResponseEntity isHoliday(@PathVariable String date) throws IOException {
+        log.info("check is date a holiday using holidays from destination");
         return ResponseEntity.ok(holidayService.getResponse("/isHoliday/" + date).body().string());
     }
 
     @GetMapping("calc/{company}/{millis}")
     public ResponseEntity calculate(@PathVariable String company,
                                     @PathVariable String millis) throws IOException {
+        log.info("get deadline from destination");
         return ResponseEntity.ok(calculateService.calculateObj(holidayService.getResponse("/calculate/"
                 + company + "/" + millis)));
     }
@@ -68,30 +69,29 @@ public class DestinationController {
                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                   LocalDate deadline
     ) throws IOException {
+        log.info("parse Calculate object to json");
         Calculate calculate = new Calculate(companyCode, submissionDate, hearingDate, deadline);
         return ResponseEntity.ok(calculateService.calculateJson(calculate));
     }
 
-    @PostMapping("mycalc")
-    public String myCalculate(@RequestParam(name = "company") String company,
-                              @RequestParam(name = "date")
-                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                              @NotNull
-                                      LocalDate date,
-                              Model model)
+    @PostMapping("calcDeadline")
+    public String calculateDeadline(@RequestParam(name = "company") String company,
+                                    @RequestParam(name = "date")
+                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                    @NotNull
+                                            LocalDate date,
+                                    Model  model)
             throws IOException {
+        log.info("calculate deadline by company code and date");
         List<Holiday> holidays = holidayService.getHolidaysList(holidayService.getResponse("/holidays/all"));
-        try {
-            model.addAttribute("deadline", calculateService.calculateDeadline(date, holidays, company));
-        } catch (BadRequestException e) {
-            model.addAttribute("errormsg", "bad value");
-        }
-        return "calculateform";
+        model.addAttribute("deadline", calculateService.calculateDeadline(date, holidays, company));
+        return  "deadline";
     }
 
-    @GetMapping("calculateform")
+    @GetMapping("calculateForm")
     public String getCalculateForm() {
-        return "calculateform";
+        log.info("get calculateForm");
+        return "calculateForm";
     }
 
 }

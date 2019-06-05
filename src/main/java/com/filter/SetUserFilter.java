@@ -29,7 +29,7 @@ public class SetUserFilter extends GenericFilterBean {
         try {
             UserProvider users = UserManagementAccessor.getUserProvider();
             User user = users.getCurrentUser();
-            log.info("this is user set filter: " + user.getName() + " " + req.getRemoteUser());
+            log.info("user : " + user.getName());
             ThreadLocalWithUserContext.setUser(user);
 
         } catch (PersistenceException e) {

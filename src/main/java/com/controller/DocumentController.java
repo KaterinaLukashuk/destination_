@@ -3,7 +3,6 @@ package com.controller;
 import com.model.data.ThreadLocalWithUserContext;
 import com.service.DocumentService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,11 +29,10 @@ public class DocumentController {
 
     @GetMapping("documentsForm")
     public String getAddDocumentForm(Model model) {
-
-
+        log.info("get documentsForm");
         if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
-           model.addAttribute("documents", documentService.getAdminDocs());
-            model.addAttribute("folders",documentService.getRoot());
+            model.addAttribute("documents", documentService.getAdminDocs());
+            model.addAttribute("folders", documentService.getRoot());
         } else {
 
             model.addAttribute("documents", documentService
@@ -42,26 +40,15 @@ public class DocumentController {
                             .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
         }
         model.addAttribute("user", ThreadLocalWithUserContext.getUser().getName());
-
-
         return "documentsForm";
     }
 
     @PostMapping("addDoc")
-    public String addDocument(@RequestParam("file") MultipartFile file,
-                              Model model) throws IOException {
-        Document document = documentService.createDocument(file.getOriginalFilename(),
+    public String addDocument(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info("add file " + file.getName() + " in document service");
+        documentService.createDocument(file.getOriginalFilename(),
                 file.getBytes(),
                 ThreadLocalWithUserContext.getUser().getName());
-
-        model.addAttribute("newdoc", document.getContentStream().getFileName());
-        if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
-            model.addAttribute("documents", documentService.getAdminDocs());
-        } else {
-            model.addAttribute("documents", documentService
-                    .getUsersDocuments(documentService
-                            .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
-        }
         return "redirect:documentsForm";
     }
 
@@ -70,22 +57,17 @@ public class DocumentController {
     public ResponseEntity downloadDocument(
             @PathVariable String docId
     ) {
+        log.info("download file with id = " + docId + " from document service");
         return documentService.downloadDoc(docId);
     }
 
     @GetMapping("delete/{docId}")
     public String deleteDocument(
-            @PathVariable String docId,
-            Model model
+            @PathVariable String docId
+
     ) {
+        log.info("delete file with id = " + docId + " from document service");
         documentService.deleteDoc(docId);
-        if (ThreadLocalWithUserContext.getUser().hasRole(ADMIN_ROLE)) {
-            model.addAttribute("documents", documentService.getAdminDocs());
-        } else {
-            model.addAttribute("documents", documentService
-                    .getUsersDocuments(documentService
-                            .getUsersFolder(ThreadLocalWithUserContext.getUser().getName())));
-        }
         return "redirect:/api/documentsForm";
     }
 }
