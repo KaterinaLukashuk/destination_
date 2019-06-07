@@ -30,8 +30,7 @@ public class DocumentService {
 
     private final ServletContext servletContext;
 
-    private final
-    EcmService ecmService;
+    private final EcmService ecmService;
 
     public DocumentService(EcmService ecmService, ServletContext servletContext) {
         this.ecmService = ecmService;

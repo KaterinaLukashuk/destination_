@@ -16,4 +16,6 @@ public class EcmServiceConfig {
         InitialContext ctx = new InitialContext();
         return  (EcmService) ctx.lookup(ECM_LOOKUP_NAME);
     }
+
+
 }

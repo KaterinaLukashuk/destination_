@@ -1,4 +1,4 @@
-package com;
+package com.utils.jsonparser;
 
 import com.model.data.Calculate;
 import com.model.data.Holiday;

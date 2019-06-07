@@ -9,8 +9,9 @@ import org.springframework.context.annotation.Configuration;
 public class DestinationConfig {
 
     @Bean
-    public OkHttpDestination okHttpDestination() {
+    public OkHttpDestination okHttpDestination(){
         DestinationFactory destinationFactory = new DestinationFactory();
+
         return destinationFactory.provide("try");
     }
 }

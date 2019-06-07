@@ -15,6 +15,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -49,5 +50,21 @@ public class Calculate {
                 append("\n").
                 append("Deadline: ").append(deadline);
         return str.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Calculate calculate = (Calculate) o;
+        return Objects.equals(companyCode, calculate.companyCode) &&
+                Objects.equals(submissionDate, calculate.submissionDate) &&
+                Objects.equals(hearingDate, calculate.hearingDate) &&
+                Objects.equals(deadline, calculate.deadline);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyCode, submissionDate, hearingDate, deadline);
     }
 }

@@ -62,7 +62,7 @@ public class CalculateService {
         return null;
     }
 
-    public String calculateObj(final Response response) throws IOException {
+    public String calculateObj(Response response) throws IOException {
         Calculate calculate = JsonUtils.fromJSON(response.body().string(),
                 new TypeReference<Calculate>() {
                 });
@@ -79,7 +79,7 @@ public class CalculateService {
         return str.toString();
     }
 
-    public String calculateJson(final Calculate calculate)
+    public String calculateJson( Calculate calculate)
             throws JsonProcessingException {
         return JsonUtils.toJSON(calculate);
     }

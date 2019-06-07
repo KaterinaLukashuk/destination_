@@ -13,7 +13,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 
@@ -25,13 +24,11 @@ public class SetUserFilter extends GenericFilterBean {
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
         try {
             UserProvider users = UserManagementAccessor.getUserProvider();
             User user = users.getCurrentUser();
             log.info("user : " + user.getName());
             ThreadLocalWithUserContext.setUser(user);
-
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
