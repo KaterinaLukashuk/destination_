@@ -27,12 +27,12 @@ public class CalculateService {
         return holidays.stream().anyMatch(holiday -> date.compareTo(holiday.getDate()) == 0);
     }
 
-    private Predicate<LocalDate> isWeekend = (date) ->
+    public Predicate<LocalDate> isWeekend = (date) ->
             (date.getDayOfWeek().toString().equals(SATURDAY)
                     || date.getDayOfWeek().toString().equals(SUNDAY));
 
 
-    private long getDaysAmountForCompany(String companyCode) throws IOException {
+   public long getDaysAmountForCompany(String companyCode) throws IOException {
         switch (companyCode) {
             case COMPANY_A_CODE:
                 return DAYS_AMOUNT_FOR_COMPANY_A;
@@ -97,7 +97,7 @@ public class CalculateService {
         return amount;
     }
 
-    public int weekendsAmount(LocalDate startDate, final LocalDate deadline) {
+    public int weekendsAmount(LocalDate startDate, LocalDate deadline) {
         int amount = 0;
         while (startDate.isBefore(deadline)
                 || startDate.compareTo(deadline) == 0) {

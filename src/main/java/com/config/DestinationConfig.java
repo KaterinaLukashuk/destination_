@@ -11,7 +11,6 @@ public class DestinationConfig {
     @Bean
     public OkHttpDestination okHttpDestination(){
         DestinationFactory destinationFactory = new DestinationFactory();
-
         return destinationFactory.provide("try");
     }
 }

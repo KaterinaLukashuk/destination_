@@ -37,7 +37,7 @@ public class DocumentService {
         this.servletContext = servletContext;
     }
 
-    private Session connectRepo() {
+    public Session connectRepo() {
         try {
             return ecmService.connect(REPOSITORY_NAME, REPOSITORY_KEY);
         } catch (CmisObjectNotFoundException e) {
@@ -50,7 +50,7 @@ public class DocumentService {
         }
     }
 
-    private void createFolder(String folderName) {
+    public void createFolder(String folderName) {
         Session session = connectRepo();
         Folder root = session.getRootFolder();
         Map<String, String> newFolderProps = new HashMap<String, String>();
@@ -70,6 +70,7 @@ public class DocumentService {
         ObjectFactory factory = session.getObjectFactory();
         ContentStream contentStream = factory.createContentStream(docName, content.length
                 , servletContext.getMimeType(docName), stream);
+        Document document = root.createDocument(properties, contentStream, VersioningState.MAJOR);
         return root.createDocument(properties, contentStream, VersioningState.MAJOR);
     }
 
